@@ -1,5 +1,15 @@
-function App(): JSX.Element {
-  return <h1 className="text-3xl font-bold underline">test</h1>
+import Canvas from './components/Canvas'
+import Inspector from './components/Inspector'
+import Toolbar from './components/Toolbar'
+
+const App: React.FC = () => {
+  return (
+    <div className="flex h-full">
+      <Toolbar />
+      <Canvas />
+      <Inspector />
+    </div>
+  )
 }
 
 export default App
