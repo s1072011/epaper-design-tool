@@ -1,44 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { setScale } from '../../store/canvasSlice'
+import { Color, SquareObj } from '@renderer/utils'
+import MousePos from './MousePos'
+import ScrollArea from './ScrollArea'
 
 const Canvas: React.FC = () => {
   const dispatch = useAppDispatch()
   const scale = useAppSelector((state) => state.canvas.scale)
   const drawingArea = useAppSelector((state) => state.canvas.drawingArea)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, isHovered: false })
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0, isHovered: false })
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  const handleWheel = useCallback(
-    (event: WheelEvent): void => {
-      event.preventDefault()
-      if (event.metaKey) {
-        const newScale = event.deltaY < 0 ? scale + 0.1 : scale - 0.1
-        dispatch(setScale(newScale))
-      } else if (event.altKey) {
-        // Scroll horizontally
-        containerRef.current!.scrollLeft += event.deltaY
-      } else {
-        containerRef.current!.scrollTop += event.deltaY
-      }
-    },
-    [scale, dispatch]
-  )
-
-  useEffect(() => {
-    const container = containerRef.current
-
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false })
-    }
-
-    return (): void => {
-      if (container) {
-        container.removeEventListener('wheel', handleWheel)
-      }
-    }
-  }, [handleWheel])
+  const initializedRef = useRef(false)
 
   const limitToBlackAndWhite = (imageData: ImageData): ImageData => {
     const data = imageData.data
@@ -51,63 +23,67 @@ const Canvas: React.FC = () => {
   }
 
   const draw = useCallback(() => {
-    const canvas = canvasRef.current
-    if (canvas) {
-      const context = canvas.getContext('2d', { willReadFrequently: true })
-      if (context) {
-        context.clearRect(0, 0, drawingArea.width, drawingArea.height)
+    const canvas = canvasRef.current!
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })!
 
-        for (let x = 0; x < drawingArea.width; x++) {
-          for (let y = 0; y < drawingArea.height; y++) {
-            context.fillStyle = (x + y) % 2 === 0 ? 'white' : '#e7e7e7'
-            context.fillRect(x, y, 1, 1)
-          }
-        }
+    if (initializedRef.current === false) {
+      ctx.scale(2, 2)
+      ctx.imageSmoothingEnabled = false
+      initializedRef.current = true
+    }
+    ctx.clearRect(0, 0, drawingArea.width, drawingArea.height)
+    for (let x = 0; x < drawingArea.width; x++) {
+      for (let y = 0; y < drawingArea.height; y++) {
+        ctx.fillStyle = (x + y) % 2 === 0 ? 'white' : '#e7e7e7'
+        ctx.fillRect(x, y, 1, 1)
       }
     }
-  }, [drawingArea])
+
+    const test = new SquareObj({ x: 10, y: 10 }, 50)
+    test.setLineWidth(6)
+    test.setColor(Color.White)
+    test.setOutlineColor(Color.Black)
+    test.draw(ctx)
+
+    // ctx.fillStyle = 'black'
+    ctx.font = 'bold 50px serif'
+    ctx.strokeText('TEST', 50, 50)
+    ctx.fillText('TEST', 50, 50)
+
+    // const newImageData = limitToBlackAndWhite(ctx.getImageData(0, 0, canvas.width, canvas.height))
+    // ctx.putImageData(newImageData, 0, 0)
+  }, [drawingArea, scale])
 
   useEffect(() => {
     draw()
   }, [draw])
 
   return (
-    <div
-      className="relative overflow-auto w-full h-full flex justify-center items-center bg-gray-100"
-      ref={containerRef}
-    >
-      <div
-        style={{
-          width: `${drawingArea.width * scale}px`,
-          height: `${drawingArea.height * scale}px`
-        }}
-      >
+    <ScrollArea
+      canvas={
         <canvas
           ref={canvasRef}
-          width={drawingArea.width}
-          height={drawingArea.height}
+          width={drawingArea.width * 2}
+          height={drawingArea.height * 2}
           style={{
-            transform: `scale(${scale})`,
+            width: `${drawingArea.width * scale}px`,
+            height: `${drawingArea.height * scale}px`,
+            // scale: `${scale}`,
             transformOrigin: '0 0',
-            imageRendering: 'pixelated', // 保持像素化效果
-            border: `${1 / scale}px solid gray`
+            imageRendering: 'pixelated',
+            border: '1px solid gray'
           }}
           onMouseMove={(event) => {
             const rect = canvasRef.current!.getBoundingClientRect()
             const x = (event.clientX - rect.left) / scale
             const y = (event.clientY - rect.top) / scale
-            setMousePosition({ x, y, isHovered: true })
+            setMousePos({ x, y, isHovered: true })
           }}
-          onMouseLeave={() => setMousePosition({ ...mousePosition, isHovered: false })}
+          onMouseLeave={() => setMousePos({ ...mousePos, isHovered: false })}
         />
-      </div>
-      {mousePosition.isHovered && (
-        <div className="absolute right-0 bottom-0 text-xs flex gap-2">
-          <div>{`x: ${mousePosition.x.toFixed(2)}`}</div>
-          <div>{`y: ${mousePosition.y.toFixed(2)}`}</div>
-        </div>
-      )}
-    </div>
+      }
+      mousePos={<MousePos x={mousePos.x} y={mousePos.y} isHovering={mousePos.isHovered} />}
+    />
   )
 }
 

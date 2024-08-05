@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  FaArrowPointer,
   FaPen,
   FaEraser,
   FaT,
@@ -13,8 +14,9 @@ import ToolbarItem from './ToolbarItem'
 const Toolbar: React.FC = () => {
   const ICON_SIZE = 24
   return (
-    <div className="h-full w-12 flex flex-col justify-between items-center bg-gray-200 p-2">
+    <div className="h-full w-12 flex flex-col justify-between items-center bg-gray-200 p-2 z-10">
       <div>
+        <ToolbarItem icon={<FaArrowPointer size={ICON_SIZE} />} name="Select" />
         <ToolbarItem icon={<FaPen size={ICON_SIZE} />} name="Pencil" />
         <ToolbarItem icon={<FaEraser size={ICON_SIZE} />} name="Eraser" />
         <ToolbarItem icon={<FaT size={ICON_SIZE} />} name="Text" />

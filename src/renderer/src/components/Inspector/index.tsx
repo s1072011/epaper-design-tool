@@ -25,7 +25,7 @@ const Inspector: React.FC = () => {
         <span className="absolute top-0 left-0 bottom-0 border border-double border-gray-300 border-l-2 cursor-ew-resize z-10" />
       }
     >
-      <div className="h-full border-l bg-gray-200">
+      <div className="h-full border-l bg-gray-100">
         <div className="flex flex-col h-full">
           <div className="border-b p-3 overflow-auto h-1/3">
             <Properties />
