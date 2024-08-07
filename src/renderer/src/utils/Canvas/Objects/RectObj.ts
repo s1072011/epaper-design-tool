@@ -1,12 +1,14 @@
 import Vector2d from '@renderer/utils/Vector2d'
 import CanvasObj from './CanvasObj'
 
-class SquareObj extends CanvasObj {
-  private size: number
+class RectObj extends CanvasObj {
+  private width: number
+  private height: number
 
-  constructor(pos: Vector2d, size: number = 1) {
+  constructor(pos: Vector2d, width: number, height?: number) {
     super(pos, 0)
-    this.size = size
+    this.width = width
+    this.height = height || width
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -15,9 +17,9 @@ class SquareObj extends CanvasObj {
     ctx.strokeStyle = this.getOutlineColor().toString()
     ctx.beginPath()
     ctx.moveTo(this.getPosition().x, this.getPosition().y)
-    ctx.lineTo(this.getPosition().x + this.size, this.getPosition().y)
-    ctx.lineTo(this.getPosition().x + this.size, this.getPosition().y + this.size)
-    ctx.lineTo(this.getPosition().x, this.getPosition().y + this.size)
+    ctx.lineTo(this.getPosition().x + this.width, this.getPosition().y)
+    ctx.lineTo(this.getPosition().x + this.width, this.getPosition().y + this.height)
+    ctx.lineTo(this.getPosition().x, this.getPosition().y + this.height)
     ctx.closePath()
     ctx.fill()
     if (this.getLineWidth() > 0) {
@@ -26,4 +28,4 @@ class SquareObj extends CanvasObj {
   }
 }
 
-export default SquareObj
+export default RectObj

@@ -45,7 +45,7 @@ const ScrollArea: React.FC<ScrollAreaProps> = ({ canvas, mousePos }) => {
   const handleWheel = useCallback(
     (event: WheelEvent): void => {
       event.preventDefault()
-      if (event.metaKey) {
+      if (event.ctrlKey || event.metaKey) {
         handleZoom(event)
       } else {
         handleScroll(event)

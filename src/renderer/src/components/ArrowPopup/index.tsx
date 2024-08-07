@@ -55,7 +55,7 @@ const ArrowPopup: React.FC<ArrowPopupProps> = ({
 
   return (
     <div
-      className={`absolute ml-${offset} ${bgColor} ${textColor} text-xs text-nowrap rounded p-1 z-10 ${visible ? 'block' : 'hidden'} ${positionClasses}`}
+      className={`absolute ml-${offset} ${bgColor} ${textColor} text-xs text-nowrap rounded select-none p-1 z-10 ${visible ? 'block' : 'hidden'} ${positionClasses}`}
     >
       {content}
       <div

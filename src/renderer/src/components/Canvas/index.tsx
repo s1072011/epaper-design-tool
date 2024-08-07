@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { Color, SquareObj } from '@renderer/utils'
+import { Color, RectObj } from '@renderer/utils'
 import MousePos from './MousePos'
 import ScrollArea from './ScrollArea'
 
@@ -39,7 +39,7 @@ const Canvas: React.FC = () => {
       }
     }
 
-    const test = new SquareObj({ x: 10, y: 10 }, 50)
+    const test = new RectObj({ x: 10, y: 10 }, 50)
     test.setLineWidth(6)
     test.setColor(Color.White)
     test.setOutlineColor(Color.Black)
@@ -68,7 +68,6 @@ const Canvas: React.FC = () => {
           style={{
             width: `${drawingArea.width * scale}px`,
             height: `${drawingArea.height * scale}px`,
-            // scale: `${scale}`,
             transformOrigin: '0 0',
             imageRendering: 'pixelated',
             border: '1px solid gray'

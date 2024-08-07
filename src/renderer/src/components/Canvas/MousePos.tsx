@@ -9,7 +9,7 @@ interface MousePosProps {
 const MousePos: React.FC<MousePosProps> = ({ x, y, isHovering }) => {
   if (isHovering) {
     return (
-      <div className="absolute bottom-0 text-xs z-10 flex gap-2">
+      <div className="absolute bottom-0 text-xs z-10 flex gap-2 select-none">
         <span>x: {x.toFixed(2)}</span>
         <span>y: {y.toFixed(2)}</span>
       </div>

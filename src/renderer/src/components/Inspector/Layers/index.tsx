@@ -1,16 +1,13 @@
 import React from 'react'
+import LayerItem from './LayerItem'
 
 const Layers: React.FC = () => {
   return (
     <div>
-      <h2 className="text-lg font-bold mb-2">Layers</h2>
-      <ul className="space-y-2">
-        <li className="border border-gray-300 p-2 rounded-md">Layer 1</li>
-        <li className="border border-gray-300 p-2 rounded-md">Layer 2</li>
-        <li className="border border-gray-300 p-2 rounded-md">Layer 3</li>
-        <li className="border border-gray-300 p-2 rounded-md">Layer 4</li>
-        <li className="border border-gray-300 p-2 rounded-md">Layer 5</li>
-        <li className="border border-gray-300 p-2 rounded-md">Layer 6</li>
+      <ul className="space-y-0.5">
+        <LayerItem name="Layer 2">
+          {[{ name: 'Layer 1.1', children: [{ name: 'Layer 1.1.1' }] }]}
+        </LayerItem>
       </ul>
     </div>
   )
